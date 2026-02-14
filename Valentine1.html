@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Will You Be My Valentine? 💖</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #ffb6c1, #ffc0cb, #ffe4e1);
+            font-family: 'Comic Sans MS', cursive;
+            text-align: center;
+            overflow: hidden;
+            color: #d63384;
+        }
+
+        h1 {
+            margin-top: 40px;
+            font-size: 38px;
+            text-shadow: 2px 2px 8px white;
+        }
+
+        /* Teddy Section */
+        .teddy-container {
+            margin-top: 20px;
+            font-size: 120px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .heart-hold {
+            font-size: 50px;
+            position: relative;
+            top: -70px;
+            left: -20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .buttons {
+            margin-top: 20px;
+            position: relative;
+            display: inline-block;
+            height: 120px;
+            width: 400px;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: absolute;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.7);
+        }
+
+        #yesBtn {
+            background: #ff4d6d;
+            color: white;
+            left: 0;
+        }
+
+        #yesBtn:hover {
+            background: #ff1e56;
+            transform: scale(1.1);
+        }
+
+        #noBtn {
+            background: white;
+            color: #ff4d6d;
+            left: 200px;
+        }
+
+        /* Floating background hearts */
+        .heart {
+            position: fixed;
+            top: -10px;
+            font-size: 20px;
+            animation: fall linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: fixed;
+            color: white;
+            animation: twinkle 2s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            from { opacity: 0.3; }
+            to { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Kunju, Will You Be My Valentine? 💌</h1>
+
+    <div class="teddy-container">
+        🧸
+        <div class="heart-hold">💖</div>
+    </div>
+
+    <div class="buttons">
+        <button id="yesBtn" onclick="sayYes()">Yes 💕</button>
+        <button id="noBtn" onclick="sayNo()" onmouseover="moveNo()">No 😢</button>
+    </div>
+
+    <script>
+        let noCount = 0;
+
+        const messages = [
+            "Are you sure? 🥺",
+            "Think again 😭",
+            "Free hugs forever 🤗",
+            "Chocolates included 🍫",
+            "Please Papu 💕",
+            "Don't break your papu's heart 🧸💔",
+            "Just press YES 😌",
+	    "Life time service warranty 😌"
+        ];
+
+        function sayNo() {
+            const noBtn = document.getElementById("noBtn");
+            const yesBtn = document.getElementById("yesBtn");
+
+            if (noCount < messages.length) {
+                noBtn.innerHTML = messages[noCount];
+            } else {
+                noBtn.innerHTML = "Destiny says YES 💘";
+            }
+
+            let currentSize = parseInt(window.getComputedStyle(yesBtn).fontSize);
+            yesBtn.style.fontSize = (currentSize + 4) + "px";
+
+            noCount++;
+        }
+
+        function moveNo() {
+            const noBtn = document.getElementById("noBtn");
+
+            const offsetX = (Math.random() * 200) - 100;
+            const offsetY = (Math.random() * 80) - 40;
+
+            noBtn.style.left = (200 + offsetX) + "px";
+            noBtn.style.top = offsetY + "px";
+        }
+
+        function sayYes() {
+            document.body.innerHTML = `
+                <h1>YAYYYY Kunju!!! 💖</h1>
+                <div style="font-size:120px;">🧸💖🧸</div>
+                <h2>You just made me the happiest person 🥰 Happy Valentine's Day my dear 💖</h2>
+            `;
+            launchHearts();
+        }
+
+        function launchHearts() {
+            setInterval(() => {
+                let heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.innerHTML = "💗";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 5000);
+            }, 200);
+        }
+
+        // Continuous floating hearts
+        setInterval(() => {
+            let heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "💞";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 4 + 3) + "s";
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 6000);
+        }, 400);
+
+        // Sparkles
+        for (let i = 0; i < 20; i++) {
+            let sparkle = document.createElement("div");
+            sparkle.classList.add("sparkle");
+            sparkle.innerHTML = "✨";
+            sparkle.style.left = Math.random() * 100 + "vw";
+            sparkle.style.top = Math.random() * 100 + "vh";
+            document.body.appendChild(sparkle);
+        }
+    </script>
+
+</body>
+</html>
