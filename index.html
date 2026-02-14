@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Will You Be My Valentine? 💖</title>
+    <title>Kunju 💖</title>
     <style>
         body {
             margin: 0;
@@ -10,6 +10,7 @@
             text-align: center;
             overflow: hidden;
             color: #d63384;
+            transition: 0.5s;
         }
 
         h1 {
@@ -18,7 +19,15 @@
             text-shadow: 2px 2px 8px white;
         }
 
-        /* Teddy Section */
+        .page {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* Teddy */
         .teddy-container {
             margin-top: 20px;
             font-size: 120px;
@@ -80,35 +89,115 @@
             left: 200px;
         }
 
-        /* Floating background hearts */
+        .love-letter {
+            margin-top: 40px;
+            font-size: 20px;
+            padding: 20px;
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+            background: rgba(255,255,255,0.6);
+            border-radius: 20px;
+        }
+
         .heart {
             position: fixed;
             top: -10px;
             font-size: 20px;
             animation: fall linear infinite;
-            opacity: 0.8;
         }
 
         @keyframes fall {
             to { transform: translateY(100vh); }
         }
 
-        /* Sparkles */
-        .sparkle {
+        /* Cupid surprise styles */
+        .cupid {
             position: fixed;
+            top: -60px;
+            width: 50px;
+            height: 50px;
+            pointer-events: none;
+            animation: fallCupid linear forwards;
+            z-index: 9999;
+        }
+
+        @keyframes fallCupid {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Popup modal styles */
+        #popupModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        #popupContent {
+            background: white;
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.9);
+            max-width: 90vw;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #popupContent img {
+            width: 200px;
+            height: auto;
+            animation: flyIn 3s ease forwards;
+        }
+
+        @keyframes flyIn {
+            0% {
+                transform: translateY(-100vh) scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: translateY(20vh) scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        #closePopup {
+            margin-top: 15px;
+            background: #ff4d6d;
             color: white;
-            animation: twinkle 2s infinite alternate;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.7);
+            transition: background 0.3s;
         }
 
-        @keyframes twinkle {
-            from { opacity: 0.3; }
-            to { opacity: 1; }
+        #closePopup:hover {
+            background: #ff1e56;
         }
-
     </style>
 </head>
 <body>
 
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
     <h1>Kunju, Will You Be My Valentine? 💌</h1>
 
     <div class="teddy-container">
@@ -117,95 +206,130 @@
     </div>
 
     <div class="buttons">
-        <button id="yesBtn" onclick="sayYes()">Yes 💕</button>
+        <button id="yesBtn" onclick="goToPage2()">Yes 💕</button>
         <button id="noBtn" onclick="sayNo()" onmouseover="moveNo()">No 😢</button>
     </div>
+</div>
 
-    <script>
-        let noCount = 0;
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+    <h1>YAYYYY Kunju!!! 💖</h1>
 
-        const messages = [
-            "Are you sure? 🥺",
-            "Think again 😭",
-            "Free hugs forever 🤗",
-            "Chocolates included 🍫",
-            "Please Papu 💕",
-            "Don't break your papu's heart 🧸💔",
-            "Just press YES 😌",
-	    "Life time service warranty 😌"
-        ];
+    <div style="font-size:120px;">🧸💖🧸</div>
 
-        function sayNo() {
-            const noBtn = document.getElementById("noBtn");
-            const yesBtn = document.getElementById("yesBtn");
+    <div class="love-letter">
+        Happy Valentine's Day my dear 💕<br><br>
+        You make my life brighter, sweeter and happier every day.  
+        I’m so lucky to have you 🥰  
+        Thank you for saying YES to being mine 💖
+    </div>
 
-            if (noCount < messages.length) {
-                noBtn.innerHTML = messages[noCount];
-            } else {
-                noBtn.innerHTML = "Destiny says YES 💘";
-            }
+    <br>
+    <button style="position:relative;" onclick="showSurprise()">🎁 Open Surprise</button>
+</div>
 
-            let currentSize = parseInt(window.getComputedStyle(yesBtn).fontSize);
-            yesBtn.style.fontSize = (currentSize + 4) + "px";
+<!-- Popup Modal -->
+<div id="popupModal">
+    <div id="popupContent">
+        <img src="https://gallery.yopriceville.com/var/albums/Animated-Gif-Images/Animated_Cupid_Be_Mine.gif?m=1629741302" alt="Flying Cupid">
+        <button id="closePopup" onclick="closePopup()">Close 💖</button>
+    </div>
+</div>
 
-            noCount++;
+<script>
+    let noCount = 0;
+
+    const messages = [
+        "Are you sure? 🥺",
+        "Think again 😭",
+        "Free hugs forever 🤗",
+        "Chocolates included 🍫",
+        "Please Papu 💕",
+        "Don't break your papu's heart 🧸💔",
+        "Just press YES 😌",
+        "Life time service warranty 😌"
+    ];
+
+    function sayNo() {
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+
+        if (noCount < messages.length) {
+            noBtn.innerHTML = messages[noCount];
+        } else {
+            noBtn.innerHTML = "Destiny says YES 💘";
         }
 
-        function moveNo() {
-            const noBtn = document.getElementById("noBtn");
+        let currentSize = parseInt(window.getComputedStyle(yesBtn).fontSize);
+        yesBtn.style.fontSize = (currentSize + 4) + "px";
 
-            const offsetX = (Math.random() * 200) - 100;
-            const offsetY = (Math.random() * 80) - 40;
+        noCount++;
+    }
 
-            noBtn.style.left = (200 + offsetX) + "px";
-            noBtn.style.top = offsetY + "px";
+    function moveNo() {
+        const noBtn = document.getElementById("noBtn");
+        const offsetX = (Math.random() * 200) - 100;
+        const offsetY = (Math.random() * 80) - 40;
+        noBtn.style.left = (200 + offsetX) + "px";
+        noBtn.style.top = offsetY + "px";
+    }
+
+    function goToPage2() {
+        document.getElementById("page1").classList.remove("active");
+        document.getElementById("page2").classList.add("active");
+        launchHearts();
+    }
+
+    function showSurprise() {
+        // Show popup modal
+        const popup = document.getElementById("popupModal");
+        popup.style.display = "flex";
+
+        // Also create flying cupids in background
+        const maxCupids = 15;
+        for (let i = 0; i < maxCupids; i++) {
+            setTimeout(() => {
+                createCupid();
+            }, i * 300);
         }
+    }
 
-        function sayYes() {
-            document.body.innerHTML = `
-                <h1>YAYYYY Kunju!!! 💖</h1>
-                <div style="font-size:120px;">🧸💖🧸</div>
-                <h2>You just made me the happiest person 🥰 Happy Valentine's Day my dear 💖</h2>
-            `;
-            launchHearts();
-        }
+    function closePopup() {
+        const popup = document.getElementById("popupModal");
+        popup.style.display = "none";
+    }
 
-        function launchHearts() {
-            setInterval(() => {
-                let heart = document.createElement("div");
-                heart.classList.add("heart");
-                heart.innerHTML = "💗";
-                heart.style.left = Math.random() * 100 + "vw";
-                heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
-                document.body.appendChild(heart);
+    function createCupid() {
+        const cupid = document.createElement("img");
+        cupid.src = "https://gallery.yopriceville.com/var/resizes/Animated-Gif-Images/Animated_Cupid.gif?m=1629825845";
+        cupid.classList.add("cupid");
+        
+        // Random horizontal position
+        cupid.style.left = Math.random() * 90 + "vw";
 
-                setTimeout(() => heart.remove(), 5000);
-            }, 200);
-        }
+        // Random animation duration between 4-7 seconds
+        cupid.style.animationDuration = (4 + Math.random() * 3) + "s";
 
-        // Continuous floating hearts
+        document.body.appendChild(cupid);
+
+        // Remove the cupid after animation finishes (7s max)
+        setTimeout(() => {
+            cupid.remove();
+        }, 7000);
+    }
+
+    function launchHearts() {
         setInterval(() => {
             let heart = document.createElement("div");
             heart.classList.add("heart");
-            heart.innerHTML = "💞";
+            heart.innerHTML = "💗";
             heart.style.left = Math.random() * 100 + "vw";
-            heart.style.animationDuration = (Math.random() * 4 + 3) + "s";
+            heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
             document.body.appendChild(heart);
-
-            setTimeout(() => heart.remove(), 6000);
-        }, 400);
-
-        // Sparkles
-        for (let i = 0; i < 20; i++) {
-            let sparkle = document.createElement("div");
-            sparkle.classList.add("sparkle");
-            sparkle.innerHTML = "✨";
-            sparkle.style.left = Math.random() * 100 + "vw";
-            sparkle.style.top = Math.random() * 100 + "vh";
-            document.body.appendChild(sparkle);
-        }
-    </script>
+            setTimeout(() => heart.remove(), 5000);
+        }, 200);
+    }
+</script>
 
 </body>
 </html>
-
